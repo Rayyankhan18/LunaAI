@@ -1,57 +1,9 @@
-
 import React, { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import { Check, ShieldAlert, Shield, Zap, Lock, Database, Clock, Webhook, Users, FileCode } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
-
-const PricingCard = ({ 
-  title, 
-  price,
-  billingPeriod = "billed monthly",
-  features,
-  buttonText = "Choose Plan",
-  isPrimary = false,
-  icon
-}: { 
-  title: string; 
-  price: string;
-  billingPeriod?: string;
-  features: string[];
-  buttonText?: string;
-  isPrimary?: boolean;
-  icon?: React.ReactNode;
-}) => {
-  return (
-    <div className="bg-black/40 border border-white/10 rounded-xl p-8">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-2xl font-bold">{title}</h3>
-        {icon && <div className="text-gray-400">{icon}</div>}
-      </div>
-      <div className="mb-6">
-        <span className="text-3xl font-bold">₹{price}</span>
-        <span className="text-white/60 ml-1">per month</span>
-        <p className="text-sm text-white/60 mt-1">{billingPeriod}</p>
-      </div>
-      <ul className="space-y-3 mb-8">
-        {features.map((feature, i) => (
-          <li key={i} className="flex items-start">
-            <Check size={18} className="text-blue-500 flex-shrink-0 mr-2 mt-0.5" />
-            <span className="text-white/80 text-sm">{feature}</span>
-          </li>
-        ))}
-      </ul>
-      <button 
-        className={`w-full py-2.5 rounded-md ${
-          isPrimary 
-            ? 'bg-blue-500 hover:bg-blue-600 text-white' 
-            : 'bg-white/10 hover:bg-white/20 text-white'
-        }`}
-      >
-        {buttonText}
-      </button>
-    </div>
-  );
-};
+import PricingPlans from '@/components/PricingPlans';
+import { Button } from '@/components/ui/button';
 
 const ComparisonFeature = ({ 
   feature, 
@@ -158,6 +110,73 @@ const FAQ = ({
 const Pricing = () => {
   const [loaded, setLoaded] = useState(false);
   const { toast } = useToast();
+  
+  const securityTools = [
+    {
+      icon: <ShieldAlert size={24} className="text-blue-500" />,
+      title: "Threat Intelligence Platform",
+      description: "Real-time monitoring and analysis of emerging threats targeting your industry"
+    },
+    {
+      icon: <Database size={24} className="text-blue-500" />,
+      title: "Secure Data Protection",
+      description: "End-to-end encryption and secure storage solutions for sensitive information"
+    },
+    {
+      icon: <FileCode size={24} className="text-blue-500" />,
+      title: "Code Vulnerability Scanner",
+      description: "Automated scanning of your codebase to identify and fix security flaws"
+    },
+    {
+      icon: <Clock size={24} className="text-blue-500" />,
+      title: "Continuous Monitoring",
+      description: "24/7 surveillance of your systems to detect anomalies and prevent breaches"
+    },
+    {
+      icon: <Webhook size={24} className="text-blue-500" />,
+      title: "API Security Gateway",
+      description: "Protect your API endpoints from unauthorized access and attacks"
+    },
+    {
+      icon: <Users size={24} className="text-blue-500" />,
+      title: "Identity Management",
+      description: "Advanced authentication and authorization controls for secure access"
+    }
+  ];
+  
+  const faqItems = [
+    {
+      question: "How does Luna's pricing compare to other cybersecurity solutions?",
+      answer: "Luna offers enterprise-grade security at a fraction of the cost of traditional solutions. Our AI-driven approach allows us to provide more efficient protection while keeping costs lower than comparable services."
+    },
+    {
+      question: "Can I switch plans later if my needs change?",
+      answer: "Absolutely! You can upgrade or downgrade your plan at any time. When upgrading, the new features become available immediately, and we'll prorate your billing accordingly."
+    },
+    {
+      question: "Do you offer discounts for annual billing?",
+      answer: "Yes, we offer a 15% discount when you choose annual billing on any of our plans. This option will be available during checkout."
+    },
+    {
+      question: "Is there a setup fee for new accounts?",
+      answer: "No, there are no setup fees or hidden charges. The price you see is the price you pay, and you can get started immediately after subscribing."
+    },
+    {
+      question: "What kind of support can I expect?",
+      answer: "All plans include some level of support, ranging from email support for Guardian Shield to a dedicated account manager for Fortress Prime. Our technical team is based in-house and specializes in cybersecurity."
+    }
+  ];
+  
+  const featureComparisons = [
+    { feature: "Threat Detection", basic: "Basic", standard: "Advanced", premium: "Enterprise" },
+    { feature: "Security Updates", basic: "Monthly", standard: "Weekly", premium: "Daily" },
+    { feature: "Vulnerability Assessment", basic: false, standard: true, premium: true },
+    { feature: "Code Security Scanning", basic: false, standard: "Basic", premium: "Advanced" },
+    { feature: "API Endpoint Protection", basic: false, standard: true, premium: true },
+    { feature: "Threat Intelligence Feed", basic: false, standard: "Standard", premium: "Premium" },
+    { feature: "User Access Controls", basic: "Basic", standard: "Role-based", premium: "Zero-trust" },
+    { feature: "Customer Support", basic: "Email", standard: "24/7 Phone & Email", premium: "Dedicated Manager" }
+  ];
 
   useEffect(() => {
     setLoaded(true);
@@ -182,49 +201,7 @@ const Pricing = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <PricingCard 
-              title="Guardian Shield" 
-              price="999" 
-              features={[
-                "Phishing attack detection",
-                "Real-time threat alerts",
-                "Regular security updates",
-                "Basic AI threat analysis",
-                "Email support"
-              ]}
-              buttonText="Choose Plan"
-            />
-            
-            <PricingCard 
-              title="Sentinel Edge" 
-              price="19,999" 
-              features={[
-                "DDoS attack mitigation",
-                "AI-driven threat analytics",
-                "Incident reporting",
-                "Role-based access controls",
-                "24/7 phone and email support"
-              ]}
-              isPrimary
-              buttonText="Choose Plan"
-            />
-            
-            <PricingCard 
-              title="Fortress Prime" 
-              price="Contact Us" 
-              billingPeriod=""
-              features={[
-                "End-to-End CICD Monitoring",
-                "Custom Threat Simulations",
-                "Automated Vulnerability Patching",
-                "Proactive code integrity checks",
-                "Dedicated account manager"
-              ]}
-              buttonText="Call Us"
-              icon={<img src="/lovable-uploads/168f55ed-b6e3-4083-a845-ce7e4ca49b7c.png" alt="Fortress" className="w-16 h-16 opacity-80" />}
-            />
-          </div>
+          <PricingPlans showHeading={false} />
 
           {/* Feature Comparison Section */}
           <div className="mt-20 mb-12">
@@ -238,54 +215,15 @@ const Pricing = () => {
               </div>
               
               <div className="px-4">
-                <ComparisonFeature 
-                  feature="Threat Detection" 
-                  basic="Basic" 
-                  standard="Advanced" 
-                  premium="Enterprise"
-                />
-                <ComparisonFeature 
-                  feature="Security Updates" 
-                  basic="Monthly" 
-                  standard="Weekly" 
-                  premium="Daily"
-                />
-                <ComparisonFeature 
-                  feature="Vulnerability Assessment" 
-                  basic={false} 
-                  standard={true} 
-                  premium={true}
-                />
-                <ComparisonFeature 
-                  feature="Code Security Scanning" 
-                  basic={false} 
-                  standard="Basic" 
-                  premium="Advanced"
-                />
-                <ComparisonFeature 
-                  feature="API Endpoint Protection" 
-                  basic={false} 
-                  standard={true} 
-                  premium={true}
-                />
-                <ComparisonFeature 
-                  feature="Threat Intelligence Feed" 
-                  basic={false} 
-                  standard="Standard" 
-                  premium="Premium"
-                />
-                <ComparisonFeature 
-                  feature="User Access Controls" 
-                  basic="Basic" 
-                  standard="Role-based" 
-                  premium="Zero-trust"
-                />
-                <ComparisonFeature 
-                  feature="Customer Support" 
-                  basic="Email" 
-                  standard="24/7 Phone & Email" 
-                  premium="Dedicated Manager"
-                />
+                {featureComparisons.map((item, index) => (
+                  <ComparisonFeature 
+                    key={index}
+                    feature={item.feature} 
+                    basic={item.basic} 
+                    standard={item.standard} 
+                    premium={item.premium}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -300,36 +238,14 @@ const Pricing = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <SecurityTool 
-                icon={<ShieldAlert size={24} className="text-blue-500" />}
-                title="Threat Intelligence Platform"
-                description="Real-time monitoring and analysis of emerging threats targeting your industry"
-              />
-              <SecurityTool 
-                icon={<Database size={24} className="text-blue-500" />}
-                title="Secure Data Protection"
-                description="End-to-end encryption and secure storage solutions for sensitive information"
-              />
-              <SecurityTool 
-                icon={<FileCode size={24} className="text-blue-500" />}
-                title="Code Vulnerability Scanner"
-                description="Automated scanning of your codebase to identify and fix security flaws"
-              />
-              <SecurityTool 
-                icon={<Clock size={24} className="text-blue-500" />}
-                title="Continuous Monitoring"
-                description="24/7 surveillance of your systems to detect anomalies and prevent breaches"
-              />
-              <SecurityTool 
-                icon={<Webhook size={24} className="text-blue-500" />}
-                title="API Security Gateway"
-                description="Protect your API endpoints from unauthorized access and attacks"
-              />
-              <SecurityTool 
-                icon={<Users size={24} className="text-blue-500" />}
-                title="Identity Management"
-                description="Advanced authentication and authorization controls for secure access"
-              />
+              {securityTools.map((tool, index) => (
+                <SecurityTool 
+                  key={index}
+                  icon={tool.icon}
+                  title={tool.title}
+                  description={tool.description}
+                />
+              ))}
             </div>
           </div>
 
@@ -341,12 +257,12 @@ const Pricing = () => {
                 <p className="text-lg text-white/70 mb-6">
                   Start with our 14-day free trial and experience enterprise-grade security with no commitment.
                 </p>
-                <button 
+                <Button 
                   onClick={handleTryFreeTrial}
                   className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-6 rounded-lg transition-colors"
                 >
                   Start Free Trial
-                </button>
+                </Button>
               </div>
               <div className="flex justify-center">
                 <div className="relative">
@@ -361,26 +277,13 @@ const Pricing = () => {
           <div className="mt-20">
             <h2 className="text-3xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
             <div className="max-w-3xl mx-auto">
-              <FAQ 
-                question="How does Luna's pricing compare to other cybersecurity solutions?"
-                answer="Luna offers enterprise-grade security at a fraction of the cost of traditional solutions. Our AI-driven approach allows us to provide more efficient protection while keeping costs lower than comparable services."
-              />
-              <FAQ 
-                question="Can I switch plans later if my needs change?"
-                answer="Absolutely! You can upgrade or downgrade your plan at any time. When upgrading, the new features become available immediately, and we'll prorate your billing accordingly."
-              />
-              <FAQ 
-                question="Do you offer discounts for annual billing?"
-                answer="Yes, we offer a 15% discount when you choose annual billing on any of our plans. This option will be available during checkout."
-              />
-              <FAQ 
-                question="Is there a setup fee for new accounts?"
-                answer="No, there are no setup fees or hidden charges. The price you see is the price you pay, and you can get started immediately after subscribing."
-              />
-              <FAQ 
-                question="What kind of support can I expect?"
-                answer="All plans include some level of support, ranging from email support for Guardian Shield to a dedicated account manager for Fortress Prime. Our technical team is based in-house and specializes in cybersecurity."
-              />
+              {faqItems.map((faq, index) => (
+                <FAQ 
+                  key={index}
+                  question={faq.question}
+                  answer={faq.answer}
+                />
+              ))}
             </div>
           </div>
 
@@ -390,9 +293,9 @@ const Pricing = () => {
             <p className="text-lg text-white/70 mb-6 max-w-2xl mx-auto">
               For organizations with specific security requirements, our team can create a tailored solution that addresses your unique challenges.
             </p>
-            <button className="bg-white/10 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+            <Button className="bg-white/10 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-lg transition-colors">
               Contact Sales
-            </button>
+            </Button>
           </div>
         </div>
       </div>
